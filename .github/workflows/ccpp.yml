@@ -19,7 +19,7 @@ jobs:
         repository: fastled/fastled
         tag: '3.3.3'
         path: libraries
-        file: "3.3.3.zip"
+        file: 3.3.3.zip
 
     - name: Build all example sketches
       uses: Legion2/arduino-builder-action@v2.0.0
