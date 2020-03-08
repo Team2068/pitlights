@@ -1,0 +1,27 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Download FastLED
+      uses: Legion2/download-release-action@v2.1.0
+      with:
+        repository: fastled/fastled
+        tag: '3.3.3'
+        path: libraries
+
+    - name: Build all example sketches
+      uses: Legion2/arduino-builder-action@v2.0.0
+      with:
+        board: "arduino:avr:uno"
+        sketch: sketch_mar07a.ino
