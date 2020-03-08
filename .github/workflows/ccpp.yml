@@ -17,7 +17,7 @@ jobs:
       uses: Legion2/download-release-action@v2.1.0
       with:
         repository: fastled/fastled
-        tag: '3.3.3'
+        tag: "3.3.3"
         path: libraries
         file: 3.3.3.zip
 
