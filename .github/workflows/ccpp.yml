@@ -13,9 +13,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
-    - name: configure
-      run: ./configure
     - name: Build all example sketches
       uses: Legion2/arduino-builder-action@v2.0.0
       with:
         board: "arduino:avr:uno"
+        sketch: sketch_mar07a.ino
