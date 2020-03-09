@@ -40,4 +40,4 @@ Current Method
 8. Voila!
 
 ## Masterpiece!
-[great_photo]: https://i.imgur.com/9jdoziz.png "Our great creation"
+![epic](https://i.imgur.com/AKG0zgr.png "Our epic creation")
