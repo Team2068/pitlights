@@ -1,7 +1,7 @@
 #include <FastLED.h>
 
 #define NUM_LEDS 88
-#define NUM_STRING_LEDS 200
+#define NUM_STRING_LEDS 500
 
 #define DATA_PIN_STRING 5
 #define DATA_PIN_LED 6
@@ -30,21 +30,32 @@ void do_funny(int r, int g, int b) {
   }
 }
 
+void do_funny_string(int r, int g, int b) {
+  for (int i = 0; i < NUM_STRING_LEDS; i++) {
+    string_leds[i].setRGB(r, g, b);
+    FastLED.show();
+    delay(20);
+    string_leds[i] = CRGB::Black;
+  }
+}
+
 void do_border(int r, int g, int b){
   // 0 - 10
   leds[0].setRGB(r, g, b);
   for (int i = 0; i < 10; i++) {
     leds[i].setRGB(r, g, b);
     FastLED.show();
-    delay(20);
+    delay(50);
     leds[i] = CRGB::Black;
   }
   // 10 - 77
+  // 10, 11, 22, 33, 44, 55, 66, 77,
   leds[10].setRGB(r, g, b);
-  for (int i = 10; i < 77; i += 7.7) {
+  for (int i = 11; i < 78; i += 11) {
+    leds[10] = CRGB::Black;
     leds[i].setRGB(r, g, b);
     FastLED.show();
-    delay(20);
+    delay(50);
     leds[i] = CRGB::Black;
   }
   // 77 - 87
@@ -52,15 +63,15 @@ void do_border(int r, int g, int b){
   for (int i = 77; i < 87; i++) {
     leds[i].setRGB(r, g, b);
     FastLED.show();
-    delay(20);
+    delay(50);
     leds[i] = CRGB::Black;
   }
   // 87 - 0 
   leds[87].setRGB(r, g, b);
-  for (int i = 87; i > 0; i -= 11) {
+  for (int i = 87; i > 20; i -= 11) {
     leds[i].setRGB(r, g, b);
     FastLED.show();
-    delay(20);
+    delay(50);
     leds[i] = CRGB::Black;
   }
 }
@@ -68,10 +79,10 @@ void do_border(int r, int g, int b){
 void setup() {
   FastLED.addLeds<WS2812, DATA_PIN_LED, GRB>(leds, NUM_LEDS);
   FastLED.addLeds<WS2812, DATA_PIN_STRING>(string_leds, NUM_STRING_LEDS);
+  FastLED.setMaxRefreshRate(100);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   do_border(255, 255, 0);
-  //do_funny(255, 255, 0);
+  FastLED.clear();
 }

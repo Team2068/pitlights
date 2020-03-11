@@ -71,48 +71,38 @@ void bit_to_rgb(unsigned char c, int &r, int &g, int &b) {
   b  = (c & 0x03) * 255 / 3;
 }
 
-void reverse(unsigned char arr[], int start, int end)
-{
-  unsigned char temp;
-  while (start < end)
-  {
-    temp = arr[start];
-    arr[start] = arr[end];
-    arr[end] = temp;
-    start++;
-    end--;
-  }
-}
-
-void printArray(unsigned char img[]) {
-  for(int i=0;i<sizeof(img);i++){
-    Serial.print((int)img[i]);
-    Serial.print(" ");
-    Serial.println();
-  }
-}
-
-void correct_image(unsigned char img[]) {
+void correct_image_AAH(unsigned char img[]) {
   unsigned char new_img[NUM_LEDS];
-  for (int i = 0; i < NUM_LEDS; i++) { // fill data originally
-    new_img[i] = img[i];
-  }
-  for (int i = 0; i < NUM_LEDS; i++) {
-    int y_pos = i / 11; // y pos is every 11 leds
-    if (y_pos % 2) { // is 1, 3, 5, 7
-      unsigned char temp[11];
-      for (int j = 0; j < 11; j++) { // fill temp with data
-        temp[j] = new_img[i + j];
-      }
-      reverse(temp, 0, (sizeof(temp) / sizeof(temp[0])) - 1); // reverse temp
-      printArray(temp);
-      for (int j = 0; j < 11; j++) { // fill new img with new data
-        new_img[i + j] = temp[j];
-      }
+
+  for (int i = 0; i < 3; i++) {
+    int incr = i*16;
+
+    for(int f = 0; f < NUM_LEDS; f += 1) {
+      incr += 1;
+      new_img[incr] = img[i * 16 + f];
     }
+    for (int b = 7; b < NUM_LEDS; b += -1) {
+      incr += 1;
+      new_img[incr] = img[(i*16)+16+b];
+    }
+
+    img = new_img;
   }
-  for (int i = 0; i < NUM_LEDS; i++) { // fill with new data
-    img[i] = new_img[i];
+}
+
+void reverse_range(unsigned char* buf, int l, int r) {
+  while(l < r) {
+    unsigned char temp = buf[l];
+    buf[l++] = buf[r];
+    buf[r--] = temp;
+  }
+}
+
+void correct_but_for_the_third_time(unsigned char img[]) {
+  reverse_range(img, 0, 10);
+  for(int i=1; i<4; i++) {
+    int index = i*11*2;
+    reverse_range(img, index, index + 10);
   }
 }
 
@@ -126,26 +116,14 @@ void draw_img(unsigned char img[]) {
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600); 
+  Serial.begin(9600);
   FastLED.addLeds<WS2812, DATA_PIN, GRB>(leds, NUM_LEDS);
   FastLED.addLeds<WS2812, DATA_PIN_STRING>(led_string, STRING_LEDS);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-
-  /* for (int dot = 0; dot < NUM_LEDS; dot++) {
-    leds[dot] = CRGB::Blue;
-    FastLED.show();
-    // clear this led for the next time around the loop
-    leds[dot] = CRGB::Black;
-    delay(30);
-    } */
-  /*for (int j = 0; j < NUM_LEDS; j++) {
-    leds[j] = (smile[j] > 0) ? CRGB::Yellow : CRGB::Black;
-    FastLED.show();
-    }*/
-  correct_image(color);
+  correct_but_for_the_third_time(color);
   draw_img(color);
   led_string[0].setRGB(0, 0, 255);
   FastLED.show();
